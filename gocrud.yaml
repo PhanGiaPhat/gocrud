@@ -1,0 +1,7 @@
+app: "gocrud"
+db_host: "localhost"
+db_port: "3306"
+db_name: "gocrud"
+db_user: "admin"
+db_pass: "admin"
+db_driver: "mysql"
