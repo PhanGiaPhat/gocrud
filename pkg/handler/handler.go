@@ -9,6 +9,8 @@ type Handler interface {
 	CreateMessage(c echo.Context) error
 	ListMessage(c echo.Context) error
 	GetMessage(c echo.Context) error
+	EditMessage(c echo.Context) error
+	DeleteMessage(c echo.Context) error
 }
 
 type handler struct {

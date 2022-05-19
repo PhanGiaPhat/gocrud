@@ -64,5 +64,7 @@ func NewServer(wr repository.MessageRepository) Server {
 	e.POST("/messages", h.CreateMessage)
 	e.GET("/messages/:id", h.GetMessage)
 	e.GET("/messages", h.ListMessage)
+	e.PUT("/messages/:id", h.EditMessage)
+	e.DELETE("/messages/:id", h.DeleteMessage)
 	return &svr{server: e}
 }
