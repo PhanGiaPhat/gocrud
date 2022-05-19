@@ -1,14 +1,21 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type Connector interface {
+	Close() error
+	DB() *sql.DB
+}
+
+type ConnectorGORM interface {
 	Open() (*gorm.DB, error)
 	Close() error
 }
@@ -41,6 +48,6 @@ func (d *db) Close() error {
 	return sqlDB.Close()
 }
 
-func NewDB() Connector {
+func NewDBGORM() ConnectorGORM {
 	return &db{}
 }

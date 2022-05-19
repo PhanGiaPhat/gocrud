@@ -43,6 +43,6 @@ func (r *messageRepo) List(offset int, size int) ([]model.Message, error) {
 	return ws, nil
 }
 
-func NewWager(db *gorm.DB) MessageRepository {
+func NewMessage(db *gorm.DB) MessageRepository {
 	return &messageRepo{db: db}
 }

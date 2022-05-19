@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/PhanGiaPhat/gocrud/pkg/database"
@@ -51,14 +52,39 @@ func initConfig() {
 }
 
 func serve(cmd *cobra.Command, args []string) {
-	db := database.NewDB()
-	conn, err := db.Open()
+	db, err := database.NewDB(database.MysqlCfg{
+		Username: viper.GetString("db_user"),
+		Password: viper.GetString("db_pass"),
+		Host:     viper.GetString("db_host"),
+		Port:     viper.GetString("db_port"),
+		Name:     viper.GetString("db_name"),
+		Driver:   viper.GetString("db_driver"),
+	})
+
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	m, err := NewMigrate(db.DB())
+	if err != nil {
+		log.Println("initial database migrate failed...")
+	}
+	if m != nil {
+		if err := m.Up(); err != nil {
+			log.Println("database migrate failed...", err)
+		} else {
+			log.Println("database migrate successful...")
+		}
+	}
+
+	dbgorm := database.NewDBGORM()
+	conn, err := dbgorm.Open()
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	wr := repository.NewWager(conn)
+	wr := repository.NewMessage(conn)
 	srv := server.NewServer(wr)
 	srv.Start()
 }
